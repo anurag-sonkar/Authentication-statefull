@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics</title>
+</head>
+<body>
+    <nav>
+        <a href="/home">home</a>
+        <a href="/analytics">analytics</a>
+    </nav>
+    <h1>Analytics</h1>
+    <table>
+        <thead>
+            <th>Id</th>
+            <th>Shorthen Url</th>
+            <th>Redirect Url</th>
+            <th>Total Clicks</th>
+            <th>Visit now</th>
+            
+        </thead>
+        <tbody>
+            <% data.forEach((element,index) => { %>
+                <tr>
+                    <td><%= index+1 %></td>
+                    <td><%= element.shortId %></td>
+                    <td><%=  element.redirectURL%></td>
+                    <td><%= element.visitHistroy.length %></td>
+                    <td><a href="http://localhost:8000/url/<%= element.shortId %>">http://localhost:8000/url/<%= element.shortId %></a></td>
+                </tr>
+             
+            <% }) %>
+
+        </tbody>
+    </table>
+    
+</body>
+</html>
