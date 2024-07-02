@@ -1,10 +1,11 @@
 const express = require("express")
 const app = express()
 const path = require("path")
-
+const cookieParser = require("cookie-parser")
 const connectMongoDb = require("./connection")
-
+const {restrictToLoggnedinUserOnly , checkAuth} = require("./middlewares/auth")
 const urlRoute = require("./routes/url")
+const staticRoutes = require("./routes/staticRoutes")
 const userRoute = require("./routes/user")
 
 //connect Database
@@ -24,10 +25,12 @@ app.set("views" , path.resolve("./views")) // folder name , path (need to import
 // middleware
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser())
 
 // routing
-app.use("/url" , urlRoute )
-app.use("/" , userRoute)
+app.use("/url" , restrictToLoggnedinUserOnly , urlRoute ) // inline middleware
+app.use("/user" , userRoute)
+app.use("/" ,checkAuth ,  staticRoutes)
 
 
 

@@ -1,24 +1,38 @@
-const URL = require("../models/url")
+const USER  = require("../models/user")
+const {v4 : uuidv4} = require("uuid")
+const { setUser } = require("../services/auth")
 
-async function handleHomePageRequest(req,res){
-    
-    res.render("home")
-    
+async function handleSignUpNewUser(req,res){
+
+    const {name , email , password} = req.body
+
+    await USER.create({
+        name ,
+        email,
+        password
+    })
+
+    return res.render("home")
+
 
 }
 
-async function handleAnalyticsPageRequest(req,res){
-    try {
-        const allUsers = await URL.find()
-        // console.log(allUsers)
-        // res.json(allUsers) // temp
-        res.render("analytics" , {data : allUsers})
-    } catch (error) {
-        console.log(error.message)
-        res.status(500).send("Server Error")
-        
+async function handleLogInUser(req,res){
+    const {email , password} = req.body
+
+    const user = await USER.find({email,password})
+
+    if(user.length === 0){
+        return res.render("login" , {
+            error : "Invalid Username or Password"
+        })
     }
 
+    const sessionId = uuidv4()
+    setUser(sessionId,user)
+    res.cookie("uid" , sessionId)
+    return res.render("home")
 }
 
-module.exports = {handleHomePageRequest,handleAnalyticsPageRequest}
+
+module.exports = {handleSignUpNewUser,handleLogInUser}

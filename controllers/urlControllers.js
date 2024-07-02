@@ -4,6 +4,7 @@ const URL = require("../models/url")
 
 async function handleGenerateNewShortUrl(req,res){
     const body = req.body
+    // console.log(req)
 
     // check
     if (!body.url) {  // name="url" inside form
@@ -18,7 +19,8 @@ async function handleGenerateNewShortUrl(req,res){
         const response = await URL.create({
             shortId:uid,
             redirectURL:body.url,
-            visitHistroy:[]  // initial not visited hence empty
+            visitHistroy:[],  // initial not visited hence empty
+            createdBy:req.user[0]._id
 
         })
 
